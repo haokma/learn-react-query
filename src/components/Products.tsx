@@ -1,30 +1,53 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useProducts} from '../hooks';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {toast} from 'react-toastify';
 
 const Products = () => {
-    const {data, page, setPage, isLoading, isFetching , isPreviousData} = useProducts();
+    const navigation = useNavigate();
+
+    const useQueryParams = () => new URLSearchParams(useLocation().search);
+    let query = useQueryParams();
+
+    const [filter, setFilter] = useState({
+        page: Number(query.get('page')) || 0,
+        search: ''
+    });
+
+    const {data, isLoading, isFetching, isPreviousData, isError} = useProducts(filter);
+
+    useEffect(() => {
+        if (isError) {
+            toast.error("Có lỗi xảy ra");
+        }
+    }, [isError]);
 
     if (isLoading) {
         return <h1>Loading...</h1>;
     }
-    console.log(data.totalPage)
+    if(isError) {
+        return <>
+        </>
+    }
+
     return (
         <div>
-            <button disabled={page === 0} onClick={() => {
-                setPage(page - 1);
+            <button disabled={filter.page === 0} onClick={() => {
+                navigation(`/product/?page=${filter.page - 1}`);
+                setFilter({
+                    ...filter,
+                    page: filter.page - 1
+                });
             }}>Prev page
             </button>
             <button
-                disabled={isPreviousData || !(data.totalPage-1> page)}
+                disabled={isPreviousData || !(data.totalPage - 1 > filter.page)}
                 onClick={() => {
-                    console.log({
-                        isPreviousData,
-                        data: data.totalPage>= page
-                    })
-
-                        setPage(old => old + 1)
-
-
+                    navigation(`/product/?page=${filter.page + 1}`);
+                    setFilter({
+                        ...filter,
+                        page: filter.page + 1
+                    });
                 }}>Next page
             </button>
             <ul>

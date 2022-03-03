@@ -15,6 +15,7 @@ export const usePhotos = () => {
                 return nextPage <= maxPage ? nextPage : undefined;
             },
         });
+
     useEffect(() => {
         let fetching = false;
         const onScroll = async (event: any) => {
