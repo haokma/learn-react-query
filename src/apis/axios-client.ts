@@ -1,24 +1,29 @@
 import axios from 'axios';
 import { error } from 'console';
 
-
 const axiosClient = axios.create({
-    baseURL: '',
-    headers: {
-        'Content-Type': 'application/json'
-    }
-})
+  baseURL: '',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-axiosClient.interceptors.request.use((config) => {
+axiosClient.interceptors.request.use(
+  (config) => {
     return config;
-}, (error) => {
+  },
+  (error) => {
     return Promise.reject(error);
-})
+  }
+);
 
-axiosClient.interceptors.request.use((response) => {
+axiosClient.interceptors.request.use(
+  (response) => {
     return response;
-}, (error) => {
+  },
+  (error) => {
     return Promise.reject(error);
-})
+  }
+);
 
-export default  axiosClient;
+export default axiosClient;
